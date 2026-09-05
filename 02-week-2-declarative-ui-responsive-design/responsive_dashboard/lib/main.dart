@@ -47,9 +47,14 @@ class DashboardPage extends StatelessWidget {
             children: [
               Icon(isDark ? Icons.dark_mode : Icons.light_mode),
               const SizedBox(width: 4),
-              CupertinoSwitch(
-                value: isDark,
-                onChanged: onDarkChanged,
+              Semantics(
+                label: isDark
+                    ? 'Mode gelap aktif, ketuk untuk beralih ke mode terang'
+                    : 'Mode terang aktif, ketuk untuk beralih ke mode gelap',
+                child: CupertinoSwitch(
+                  value: isDark,
+                  onChanged: onDarkChanged,
+                ),
               ),
               const SizedBox(width: 12),
             ],
@@ -59,12 +64,15 @@ class DashboardPage extends StatelessWidget {
       body: LayoutBuilder(
         builder: (context, constraints) {
           final columns = constraints.maxWidth >= 700 ? 2 : 1;
+          final isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
+          final aspectRatio = isLandscape ? 3.2 : 2.6;
+
           return GridView.count(
             padding: const EdgeInsets.all(16),
             crossAxisCount: columns,
             crossAxisSpacing: 16,
             mainAxisSpacing: 16,
-            childAspectRatio: 2.6,
+            childAspectRatio: aspectRatio, 
             children: const [
               DashboardCard(title: 'Assignments', value: '8'),
               DashboardCard(title: 'Attendance', value: '92%'),
@@ -85,13 +93,26 @@ class DashboardCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Row(children: [
-          Expanded(child: Text(title)),
-          Text(value, style: Theme.of(context).textTheme.headlineSmall),
-        ]),
+    return Semantics(
+      label: '$title: $value',
+      container: true,
+      child: Card(
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Row(children: [
+            Expanded(
+              child: ExcludeSemantics(
+                child: Text(
+                  title,
+                  overflow: TextOverflow.ellipsis, 
+                ),
+              ),
+            ),
+            ExcludeSemantics(
+              child: Text(value, style: Theme.of(context).textTheme.headlineSmall),
+            ),
+          ]),
+        ),
       ),
     );
   }
