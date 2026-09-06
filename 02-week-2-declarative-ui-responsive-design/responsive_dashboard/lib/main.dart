@@ -134,8 +134,8 @@ class DashboardPage extends StatelessWidget {
                   mainAxisSpacing: 16,
                   childAspectRatio: aspectRatio,
                   children: const [
-                    DashboardCard(title: 'Semester', value: '5'),
-                    DashboardCard(title: 'IPK', value: '3.75'),
+                    DashboardCard(title: 'Assignments', value: '8'),
+                    DashboardCard(title: 'Attendance', value: '92%'),
                     DashboardCard(title: 'Portfolio', value: 'Ready'),
                     DashboardCard(title: 'Current week', value: '02'),
                   ],
