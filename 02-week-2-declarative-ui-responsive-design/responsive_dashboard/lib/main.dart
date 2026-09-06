@@ -41,7 +41,7 @@ class DashboardPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Student Dashboard'),
+        title: const Text('AngelBoard'),
         actions: [
           Row(
             children: [
@@ -67,24 +67,89 @@ class DashboardPage extends StatelessWidget {
           final isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
           final aspectRatio = isLandscape ? 3.2 : 2.6;
 
-          return GridView.count(
+          return SingleChildScrollView(         
             padding: const EdgeInsets.all(16),
-            crossAxisCount: columns,
-            crossAxisSpacing: 16,
-            mainAxisSpacing: 16,
-            childAspectRatio: aspectRatio, 
-            children: const [
-              DashboardCard(title: 'Assignments', value: '8'),
-              DashboardCard(title: 'Attendance', value: '92%'),
-              DashboardCard(title: 'Portfolio', value: 'Ready'),
-              DashboardCard(title: 'Current week', value: '02'),
-            ],
+            child: Column(                        
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                  Semantics(
+                    label: 'Profil siswa: Angel Chelssa, D-IV Teknik Informatika',
+                    container: true,
+                    child: Container(
+                      padding: const EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                        color: isDark ? Colors.blue.shade700 : Colors.blue.shade100,
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Row(
+                        children: [
+                          CircleAvatar(
+                            radius: 32,
+                            backgroundColor: isDark ? Colors.blue.shade300 : Colors.blue,
+                            child: const ExcludeSemantics(
+                              child: Text(
+                                'AC',
+                                style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 16),
+                          const Expanded(
+                            child: ExcludeSemantics(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    'Angel Chelssa',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18,
+                                    ),
+                                  ),
+                                  SizedBox(height: 4),
+                                  Text(
+                                    'D-IV Teknik Informatika, 244107020202',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.normal,
+                                      fontSize: 13,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                const SizedBox(height: 20),       
+
+                GridView.count(                  
+                  shrinkWrap: true,              
+                  physics: const NeverScrollableScrollPhysics(), 
+                  padding: EdgeInsets.zero,                      
+                  crossAxisCount: columns,
+                  crossAxisSpacing: 16,
+                  mainAxisSpacing: 16,
+                  childAspectRatio: aspectRatio,
+                  children: const [
+                    DashboardCard(title: 'Semester', value: '5'),
+                    DashboardCard(title: 'IPK', value: '3.75'),
+                    DashboardCard(title: 'Portfolio', value: 'Ready'),
+                    DashboardCard(title: 'Current week', value: '02'),
+                  ],
+                ),
+              ],
+            ),
           );
         },
       ),
     );
   }
 }
+
+
 
 class DashboardCard extends StatelessWidget {
   const DashboardCard({required this.title, required this.value, super.key});
