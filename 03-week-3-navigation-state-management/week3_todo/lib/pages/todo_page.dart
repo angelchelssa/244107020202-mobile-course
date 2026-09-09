@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/todo_provider.dart';
+import 'product_page.dart'; // ⬅️ TAMBAHAN 1: import ProductPage
 
 class TodoPage extends ConsumerWidget {
   const TodoPage({super.key});
@@ -10,7 +11,19 @@ class TodoPage extends ConsumerWidget {
     final todos = ref.watch(todoListProvider);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('ToDo Riverpod')),
+      appBar: AppBar(
+        title: const Text('ToDo Riverpod'),
+        actions: [
+          // ⬅️ TAMBAHAN 2: tombol buka ProductPage
+          IconButton(
+            icon: const Icon(Icons.shopping_bag),
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const ProductPage()),
+            ),
+          ),
+        ],
+      ),
       body: todos.isEmpty
           ? const Center(child: Text('Belum ada tugas'))
           : ListView.builder(
