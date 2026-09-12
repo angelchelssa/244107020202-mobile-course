@@ -1,17 +1,88 @@
-# week3_navigation
+# Praktikum 1 — Multi-Page Navigation dengan GoRouter
 
-A new Flutter project.
+Navigasi antar halaman (Home → Detail) menggunakan `go_router` dengan path parameter `:id`.
 
-## Getting Started
+## Setup
 
-This project is a starting point for a Flutter application.
+```bash
+flutter create week3_navigation
+cd week3_navigation
+flutter pub add go_router
+```
 
-A few resources to get you started if this is your first Flutter project:
+## Kode
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
+**lib/main.dart**
+```dart
+final _router = GoRouter(
+  initialLocation: '/',
+  routes: [
+    GoRoute(
+      path: '/',
+      builder: (context, state) => const HomePage(),
+      routes: [
+        GoRoute(
+          path: 'detail/:id',
+          builder: (context, state) => DetailPage(
+            id: state.pathParameters['id']!,
+          ),
+        ),
+      ],
+    ),
+  ],
+);
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp.router(
+      routerConfig: _router,
+      theme: ThemeData(colorSchemeSeed: Colors.indigo, useMaterial3: true),
+    );
+  }
+}
+```
+
+**lib/pages/home_page.dart**
+```dart
+class HomePage extends StatelessWidget {
+  const HomePage({super.key});
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Home')),
+      body: ListView.builder(
+        itemCount: 10,
+        itemBuilder: (context, index) => ListTile(
+          title: Text('Item ${index + 1}'),
+          onTap: () => context.go('/detail/${index + 1}'),
+        ),
+      ),
+    );
+  }
+}
+```
+
+**lib/pages/detail_page.dart**
+```dart
+class DetailPage extends StatelessWidget {
+  final String id;
+  const DetailPage({super.key, required this.id});
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('Detail $id')),
+      body: Center(child: Text('Anda membuka item dengan id: $id')),
+    );
+  }
+}
+```
+
+## Hasil
+
+| Home | Detail |
+|---|---|
+| ![Home](foto1.jpeg) | ![Detail](foto2.jpeg) |
+
+Path berubah sesuai layar aktif (`/` → `/detail/1`) dan `/detail/1` bisa diakses langsung tanpa lewat Home — ini keunggulan router deklaratif dibanding Navigator 1.0.
