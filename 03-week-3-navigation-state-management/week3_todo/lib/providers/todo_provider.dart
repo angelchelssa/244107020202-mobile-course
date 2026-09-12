@@ -26,3 +26,31 @@ class TodoListNotifier extends Notifier<List<Todo>> {
 
 final todoListProvider =
     NotifierProvider<TodoListNotifier, List<Todo>>(TodoListNotifier.new);
+
+/// --- Fitur filter ---
+
+enum TodoFilter { all, active, done }
+
+class TodoFilterNotifier extends Notifier<TodoFilter> {
+  @override
+  TodoFilter build() => TodoFilter.all;
+
+  void set(TodoFilter filter) => state = filter;
+}
+
+final todoFilterProvider =
+    NotifierProvider<TodoFilterNotifier, TodoFilter>(TodoFilterNotifier.new);
+
+final filteredTodosProvider = Provider<List<Todo>>((ref) {
+  final todos = ref.watch(todoListProvider);
+  final filter = ref.watch(todoFilterProvider);
+
+  switch (filter) {
+    case TodoFilter.active:
+      return todos.where((t) => !t.done).toList();
+    case TodoFilter.done:
+      return todos.where((t) => t.done).toList();
+    case TodoFilter.all:
+      return todos;
+  }
+});

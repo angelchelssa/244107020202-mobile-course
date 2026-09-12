@@ -2,10 +2,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class ProductsNotifier extends AsyncNotifier<List<String>> {
   @override
-  Future<List<String>> build() async {
-    await Future.delayed(const Duration(seconds: 2)); 
-    return ['Keyboard', 'Mouse', 'Monitor', 'Headset'];
-  }
+    Future<List<String>> build() async {
+        await Future.delayed(const Duration(seconds: 2));
+        return ['Keyboard', 'Mouse', 'Monitor'];
+    }
 
   Future<void> refresh() async {
     state = const AsyncLoading();

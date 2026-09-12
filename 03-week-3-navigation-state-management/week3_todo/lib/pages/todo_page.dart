@@ -1,26 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/todo_provider.dart';
-import 'product_page.dart'; // ⬅️ TAMBAHAN 1: import ProductPage
+import '../widgets/todo_tile.dart';
 
 class TodoPage extends ConsumerWidget {
   const TodoPage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final todos = ref.watch(todoListProvider);
+    // Membaca daftar yang SUDAH difilter (bukan todoListProvider langsung)
+    // supaya UI otomatis mengikuti pilihan filter pengguna di AppBar.
+    final todos = ref.watch(filteredTodosProvider);
+    final filter = ref.watch(todoFilterProvider);
 
     return Scaffold(
       appBar: AppBar(
         title: const Text('ToDo Riverpod'),
         actions: [
-          // ⬅️ TAMBAHAN 2: tombol buka ProductPage
-          IconButton(
-            icon: const Icon(Icons.shopping_bag),
-            onPressed: () => Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const ProductPage()),
-            ),
+          PopupMenuButton<TodoFilter>(
+            key: const Key('todoFilterButton'),
+            tooltip: 'Filter',
+            initialValue: filter,
+            onSelected: (value) =>
+                ref.read(todoFilterProvider.notifier).set(value),
+            itemBuilder: (context) => const [
+              PopupMenuItem(value: TodoFilter.all, child: Text('Semua')),
+              PopupMenuItem(value: TodoFilter.active, child: Text('Aktif')),
+              PopupMenuItem(value: TodoFilter.done, child: Text('Selesai')),
+            ],
           ),
         ],
       ),
@@ -28,25 +35,25 @@ class TodoPage extends ConsumerWidget {
           ? const Center(child: Text('Belum ada tugas'))
           : ListView.builder(
               itemCount: todos.length,
-              itemBuilder: (context, index) => ListTile(
-                leading: Checkbox(
-                  value: todos[index].done,
-                  onChanged: (_) =>
-                      ref.read(todoListProvider.notifier).toggle(index),
-                ),
-                title: Text(
-                  todos[index].title,
-                  style: TextStyle(
-                      decoration: todos[index].done
-                          ? TextDecoration.lineThrough
-                          : null),
-                ),
-                trailing: IconButton(
-                  icon: const Icon(Icons.delete),
-                  onPressed: () =>
-                      ref.read(todoListProvider.notifier).remove(index),
-                ),
-              ),
+              itemBuilder: (context, index) {
+                final todo = todos[index];
+                // `todos` di sini bisa jadi hasil filter (subset/urutan beda
+                // dari todoListProvider), jadi kita cari index ASLI-nya
+                // dulu sebelum memanggil toggle/remove. indexOf aman karena
+                // filteredTodosProvider tidak menyalin objek Todo, hanya
+                // memfilter referensi yang sama.
+                final originalIndex =
+                    ref.read(todoListProvider).indexOf(todo);
+                return TodoTile(
+                  todo: todo,
+                  onToggle: () => ref
+                      .read(todoListProvider.notifier)
+                      .toggle(originalIndex),
+                  onDelete: () => ref
+                      .read(todoListProvider.notifier)
+                      .remove(originalIndex),
+                );
+              },
             ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => _showAddDialog(context, ref),
