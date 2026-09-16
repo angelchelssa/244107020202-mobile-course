@@ -8,24 +8,29 @@ class PagedPostsState {
     this.currentPage = 0,
     this.hasNextPage = true,
     this.isLoading = false,
+    this.error,
   });
 
   final List<Post> items;
   final int currentPage;
   final bool hasNextPage;
   final bool isLoading;
+  final Object? error;
 
   PagedPostsState copyWith({
     List<Post>? items,
     int? currentPage,
     bool? hasNextPage,
     bool? isLoading,
+    Object? error,
+    bool clearError = false,
   }) {
     return PagedPostsState(
       items: items ?? this.items,
       currentPage: currentPage ?? this.currentPage,
       hasNextPage: hasNextPage ?? this.hasNextPage,
       isLoading: isLoading ?? this.isLoading,
+      error: clearError ? null : (error ?? this.error),
     );
   }
 }
@@ -41,7 +46,7 @@ class PagedPostsNotifier extends Notifier<PagedPostsState> {
   Future<void> loadNextPage() async {
     if (state.isLoading || !state.hasNextPage) return;
 
-    state = state.copyWith(isLoading: true);
+    state = state.copyWith(isLoading: true, clearError: true);
 
     try {
       final dio = ref.read(dioProvider);
@@ -66,10 +71,10 @@ class PagedPostsNotifier extends Notifier<PagedPostsState> {
         currentPage: nextPage,
         hasNextPage: newPosts.length == _pageSize,
         isLoading: false,
+        clearError: true,
       );
     } catch (e) {
-      state = state.copyWith(isLoading: false);
-      rethrow;
+      state = state.copyWith(isLoading: false, error: e);
     }
   }
 
