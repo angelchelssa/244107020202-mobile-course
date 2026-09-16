@@ -57,6 +57,7 @@ class PostListPage extends ConsumerWidget {
                 final post = posts[index];
                 return PostTile(
                   post: post,
+                  index: index,
                   onTap: () => context.push('/post/${post.id}'),
                 );
               },
