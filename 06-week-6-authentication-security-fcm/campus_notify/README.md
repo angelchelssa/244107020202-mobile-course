@@ -2,9 +2,6 @@
 
 Aplikasi mobile Flutter untuk sistem notifikasi dan pengumuman kampus. Aplikasi ini menerapkan autentikasi dengan penyimpanan token aman di platform Keystore/Keychain, refresh token otomatis lewat HTTP interceptor, route guarding deklaratif, serta integrasi **Firebase Cloud Messaging (FCM)** yang mendukung navigasi deep-link dari tiga status aplikasi (*foreground*, *background*, *terminated*) dan siaran pengumuman berbasis topik.
 
-> 📖 **Catatan Dokumentasi:**
-> Untuk laporan lengkap perkuliahan, rincian praktikum 1–3, galeri tangkapan layar pengujian, verifikasi AI challenge, serta checklist mandiri, silakan lihat **[Laporan Utama Week 6](../README.md)**.
-
 ---
 
 ## Fitur Utama
