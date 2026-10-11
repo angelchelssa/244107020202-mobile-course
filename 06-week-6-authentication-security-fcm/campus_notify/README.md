@@ -171,3 +171,15 @@ lib/
 │           └── pages/login_page.dart
 └── routes.dart
 ```
+
+---
+
+---
+
+## PRAKTIKUM 2: DOMAIN DAN DATA FITUR AUTH
+
+![Struktur folder](../screenshots/p2-struktur-folder.png)
+---
+![Analyze dan test](../screenshots/p2-analyze-test.png)
+---
+![Git log](../screenshots/p2-git-log.png)
