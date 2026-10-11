@@ -46,7 +46,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
               Padding(
                 padding: const EdgeInsets.only(bottom: 12),
                 child: Text(
-                  '${auth.error}'.replaceFirst('Exception: ', ''),
+                  '${auth.error}',
                   style: const TextStyle(color: Colors.red),
                 ),
               ),
