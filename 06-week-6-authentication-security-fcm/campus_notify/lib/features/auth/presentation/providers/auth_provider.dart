@@ -1,7 +1,9 @@
+import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../data/token_store.dart';
+import '../../../../data/api_client.dart';
 import '../../data/repositories/auth_repository_impl.dart';
+import '../../data/token_store.dart';
 import '../../domain/repositories/auth_repository.dart';
 import '../../domain/usecases/login.dart';
 import '../../domain/usecases/logout.dart';
@@ -11,6 +13,11 @@ final tokenStoreProvider = Provider<TokenStore>((ref) => TokenStore());
 final authRepositoryProvider = Provider<AuthRepository>((ref) {
   return const AuthRepositoryImpl();
 });
+
+final dioProvider = Provider<Dio>((ref) => buildApiClient(
+      ref.watch(tokenStoreProvider),
+      ref.watch(authRepositoryProvider),
+    ));
 
 final loginUseCaseProvider = Provider<Login>((ref) {
   return Login(ref.watch(authRepositoryProvider));

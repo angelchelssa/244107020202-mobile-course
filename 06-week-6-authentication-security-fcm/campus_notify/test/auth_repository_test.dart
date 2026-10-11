@@ -1,48 +1,68 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:campu_notify/data/auth_repository.dart';
+import 'package:campu_notify/core/failures.dart';
+import 'package:campu_notify/features/auth/data/repositories/auth_repository_impl.dart';
 
 void main() {
-  group('AuthRepository', () {
-    late AuthRepository repository;
+  group('AuthRepositoryImpl', () {
+    late AuthRepositoryImpl repository;
 
     setUp(() {
-      repository = AuthRepository();
+      repository = const AuthRepositoryImpl();
     });
 
     test('login berhasil dengan email valid dan sandi >= 6 karakter', () async {
-      final session = await repository.login(
+      final result = await repository.login(
         email: 'user@campus.ac.id',
         password: 'password123',
       );
 
-      expect(session.access, 'mock-access-for-user@campus.ac.id');
-      expect(session.refresh, 'mock-refresh-for-user@campus.ac.id');
+      expect(result.failure, isNull);
+      expect(result.session, isNotNull);
+      expect(result.session!.access, 'mock-access-for-user@campus.ac.id');
+      expect(result.session!.refresh, 'mock-refresh-for-user@campus.ac.id');
     });
 
     test('login gagal jika email tanpa @', () async {
-      expect(
-        () => repository.login(email: 'invalidemail', password: 'password123'),
-        throwsA(isA<Exception>()),
+      final result = await repository.login(
+        email: 'invalidemail',
+        password: 'password123',
       );
+
+      expect(result.session, isNull);
+      expect(result.failure, isA<AuthFailure>());
+      expect(result.failure?.message, 'Email atau kata sandi tidak valid');
     });
 
     test('login gagal jika sandi kurang dari 6 karakter', () async {
-      expect(
-        () => repository.login(email: 'user@campus.ac.id', password: '123'),
-        throwsA(isA<Exception>()),
+      final result = await repository.login(
+        email: 'user@campus.ac.id',
+        password: '123',
       );
+
+      expect(result.session, isNull);
+      expect(result.failure, isA<AuthFailure>());
+      expect(result.failure?.message, 'Email atau kata sandi tidak valid');
     });
 
     test('refresh mengembalikan token baru jika refreshToken tidak kosong', () async {
-      final token = await repository.refresh('valid-refresh-token');
-      expect(token, startsWith('mock-access-renewed-'));
+      final result = await repository.refresh('valid-refresh-token');
+
+      expect(result.failure, isNull);
+      expect(result.token, startsWith('mock-access-renewed-'));
     });
 
-    test('refresh melempar exception jika refreshToken kosong', () async {
-      expect(
-        () => repository.refresh(''),
-        throwsA(isA<Exception>()),
-      );
+    test('refresh melempar failure jika refreshToken kosong', () async {
+      final result = await repository.refresh('');
+
+      expect(result.token, isNull);
+      expect(result.failure, isA<AuthFailure>());
+      expect(result.failure?.message, 'Refresh token hilang');
+    });
+
+    test('logout berhasil mengembalikan failure null', () async {
+      final result = await repository.logout();
+
+      expect(result.failure, isNull);
     });
   });
 }
