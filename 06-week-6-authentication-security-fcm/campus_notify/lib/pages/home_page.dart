@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../messaging/push_service.dart';
-import '../features/auth/presentation/providers/auth_provider.dart';
+import '../providers/auth_provider.dart';
 
 class HomePage extends ConsumerStatefulWidget {
   const HomePage({super.key});
@@ -40,16 +40,16 @@ class _HomePageState extends ConsumerState<HomePage> {
           children: [
             const Text('Anda sudah login'),
             const SizedBox(height: 8),
-            ref.watch(accessTokenProvider).when(
-                  data: (t) {
-                    final shown = t == null
-                        ? '-'
-                        : '${t.substring(0, t.length < 12 ? t.length : 12)}...';
-                    return Text('Access token: $shown');
-                  },
-                  loading: () => const Text('Access token: -'),
-                  error: (_, _) => const Text('Access token: -'),
-                ),
+            FutureBuilder<String?>(
+              future: ref.read(tokenStoreProvider).readAccess(),
+              builder: (context, snap) {
+                final t = snap.data;
+                final shown = t == null
+                    ? '-'
+                    : '${t.substring(0, t.length < 12 ? t.length : 12)}...';
+                return Text('Access token: $shown');
+              },
+            ),
             const SizedBox(height: 16),
             FilledButton(
               onPressed: () => context.push('/pengumuman/3'),

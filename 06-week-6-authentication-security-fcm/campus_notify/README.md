@@ -30,28 +30,24 @@ campus_notify/
 │   └── settings.gradle.kts            # Plugin com.google.gms.google-services
 ├── lib/
 │   ├── main.dart                      # Inisialisasi Firebase, GoRouter, ProviderScope
-│   ├── core/
-│   │   └── failures.dart              # Failure domain (AuthFailure, NetworkFailure)
 │   ├── data/
-│   │   └── api_client.dart            # Klien Dio + interceptor refresh token 401
-│   ├── features/
-│   │   └── auth/
-│   │       ├── domain/                # entities, repositories (interface), usecases (login, logout)
-│   │       ├── data/                  # models, repositories (impl), token_store.dart
-│   │       └── presentation/          # pages/login_page.dart, providers/auth_provider.dart
+│   │   ├── api_client.dart            # Klien Dio + interceptor refresh token 401
+│   │   ├── auth_repository.dart       # Mock login & refresh autentikasi
+│   │   └── token_store.dart           # Akses tunggal penyimpanan flutter_secure_storage
 │   ├── messaging/
 │   │   ├── background_handler.dart    # Handler pesan FCM saat aplikasi di background
 │   │   └── push_service.dart          # Izin notifikasi, listener token, handler 3 state
-│   └── pages/
-│       ├── announcement_page.dart     # Halaman detail pengumuman (/pengumuman/:id)
-│       ├── debug_page.dart            # Halaman diagnosa token FCM & sinkronisasi
-│       └── home_page.dart             # Halaman utama setelah login
+│   ├── pages/
+│   │   ├── announcement_page.dart     # Halaman detail pengumuman (/pengumuman/:id)
+│   │   ├── debug_page.dart            # Halaman diagnosa token FCM & sinkronisasi
+│   │   ├── home_page.dart             # Halaman utama setelah login
+│   │   └── login_page.dart            # Halaman autentikasi pengguna
+│   └── providers/
+│       └── auth_provider.dart         # Riverpod AsyncNotifierProvider untuk status login
 └── test/
     ├── auth_repository_test.dart      # Unit test logika autentikasi & refresh
     └── widget_test.dart               # Widget smoke test cold-start LoginPage
 ```
-
-> Struktur `lib/` diperbarui pada Week 7 (Clean Architecture untuk fitur auth). Detail di laporan Week 7.
 
 ---
 
@@ -92,8 +88,8 @@ campus_notify/
 ## Kredensial Uji Coba
 
 Aplikasi menggunakan autentikasi tiruan (*mock*) yang memvalidasi format email dan panjang sandi:
-- **Email**: Harus berisi karakter `@` (contoh: `mhs@polinema.ac.id`).
-- **Kata Sandi**: Minimal 6 karakter (contoh: `123456`).
+- **Email**: Harus berisi karakter `@` (contoh: `mahasiswa@campus.ac.id`).
+- **Kata Sandi**: Minimal 6 karakter (contoh: `admin123`).
 
 ---
 
@@ -105,4 +101,3 @@ Aplikasi menggunakan autentikasi tiruan (*mock*) yang memvalidasi format email d
 - **[Hasil Verifikasi & Perbaikan](../docs/03-hasil-verifikasi.md)**
 - **[Hasil Uji Tiga App State & Topik](../docs/04-hasil-uji-tiga-state.md)**
 - **[Folder Tangkapan Layar](../screenshots/)**
-- **[Laporan Week 7: Clean Architecture](../../07-week-7-clean-architecture/README.md)**

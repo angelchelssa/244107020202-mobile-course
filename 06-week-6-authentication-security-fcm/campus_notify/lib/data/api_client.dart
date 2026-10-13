@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
-import '../features/auth/data/token_store.dart';
-import '../features/auth/domain/repositories/auth_repository.dart';
+import 'auth_repository.dart';
+import 'token_store.dart';
 
 Dio buildApiClient(TokenStore store, AuthRepository auth) {
   final dio = Dio(BaseOptions(baseUrl: 'https://example-campus-api.test'));
@@ -17,12 +17,7 @@ Dio buildApiClient(TokenStore store, AuthRepository auth) {
         final refresh = await store.readRefresh();
         if (refresh == null) return handler.next(e);
         try {
-          final result = await auth.refresh(refresh);
-          final renewed = result.token;
-          if (renewed == null) {
-            await store.clear();
-            return handler.next(e);
-          }
+          final renewed = await auth.refresh(refresh);
           await store.save(access: renewed, refresh: refresh);
           final retry = await dio.fetch(
             e.requestOptions..headers['Authorization'] = 'Bearer $renewed',

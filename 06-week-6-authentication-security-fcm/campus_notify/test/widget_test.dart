@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:campu_notify/main.dart';
-import 'package:campu_notify/features/auth/presentation/providers/auth_provider.dart';
+import 'package:campu_notify/providers/auth_provider.dart';
 
 class FakeAuthNotifier extends AuthNotifier {
   @override
