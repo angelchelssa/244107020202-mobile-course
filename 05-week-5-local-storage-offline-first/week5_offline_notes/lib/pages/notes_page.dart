@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../data/offline_providers.dart';
 import '../data/sync.dart';
+import '../utils/validators.dart';
 import 'posts_page.dart';
 import 'settings_page.dart';
 
@@ -12,36 +13,51 @@ class NotesPage extends ConsumerWidget {
     final messenger = ScaffoldMessenger.of(context);
     final title = TextEditingController();
     final body = TextEditingController();
+    String? titleError;
+
     final ok = await showDialog<bool>(
       context: context,
-      builder: (ctx) => AlertDialog(
-        title: const Text('Catatan baru'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextField(
-              controller: title,
-              decoration: const InputDecoration(labelText: 'Judul'),
+      builder: (ctx) => StatefulBuilder(
+        builder: (ctx, setDialogState) => AlertDialog(
+          title: const Text('Catatan baru'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                controller: title,
+                decoration: InputDecoration(
+                  labelText: 'Judul',
+                  errorText: titleError,
+                ),
+              ),
+              TextField(
+                controller: body,
+                decoration: const InputDecoration(labelText: 'Isi'),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(ctx, false),
+              child: const Text('Batal'),
             ),
-            TextField(
-              controller: body,
-              decoration: const InputDecoration(labelText: 'Isi'),
+            FilledButton(
+              onPressed: () {
+                final error = validateTitle(title.text);
+                if (error != null) {
+                  setDialogState(() => titleError = error);
+                  return;
+                }
+                Navigator.pop(ctx, true);
+              },
+              child: const Text('Simpan'),
             ),
           ],
         ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx, false),
-            child: const Text('Batal'),
-          ),
-          FilledButton(
-            onPressed: () => Navigator.pop(ctx, true),
-            child: const Text('Simpan'),
-          ),
-        ],
       ),
     );
-    if (ok == true && title.text.trim().isNotEmpty) {
+
+    if (ok == true) {
       await ref
           .read(notesProvider.notifier)
           .add(title.text.trim(), body.text.trim());
