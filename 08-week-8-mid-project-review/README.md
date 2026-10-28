@@ -125,10 +125,71 @@ Latihan awalnya dikerjakan di `05-week-5-local-storage-offline-first`, lalu dipi
 
 ## Praktikum 2: PR dan Peer Review
 
-**Pull Request:** (tempel link PR di sini)
+**Pull Request:** https://github.com/ArifahZhafirah/244107020188-mobile-course/pull/1
+
+### 1. Tukar PR dengan pasangan
+
+<table border="1" cellpadding="8" cellspacing="0" align="center">
+  <tr>
+    <th align="center">Tukar PR dengan pasangan</th>
+  </tr>
+  <tr>
+    <td align="center"><img src="screenshots/p2-tukar-pr-whatsapp.png" width="700" alt="Tukar PR via WhatsApp"></td>
+  </tr>
+</table>
+
+### 2. Review yang saya berikan
+
+<table border="1" cellpadding="8" cellspacing="0" align="center">
+  <tr>
+    <th align="center">PR pasangan yang saya review</th>
+  </tr>
+  <tr>
+    <td align="center"><img src="screenshots/p2-review-diberikan-reviewer.png" width="700" alt="PR pasangan yang saya review"></td>
+  </tr>
+</table>
+
+<table border="1" cellpadding="8" cellspacing="0" align="center">
+  <tr>
+    <th align="center">Keputusan review (Approve) dan tabel temuan</th>
+  </tr>
+  <tr>
+    <td align="center"><img src="screenshots/p2-review-diberikan-conversation.png" width="700" alt="Keputusan review Approve dan tabel temuan"></td>
+  </tr>
+</table>
+
+#### Komentar inline
+
+<table border="1" cellpadding="8" cellspacing="0" align="center">
+  <tr>
+    <th align="center" width="50%">Komentar 1</th>
+    <th align="center" width="50%">Komentar 2</th>
+  </tr>
+  <tr>
+    <td align="center"><img src="screenshots/p2-review-diberikan-inline-1.png" width="400" alt="Komentar inline 1"></td>
+    <td align="center"><img src="screenshots/P2-review-diberikan-inline-2.png" width="400" alt="Komentar inline 2"></td>
+  </tr>
+  <tr>
+    <th align="center">Komentar 3</th>
+    <th align="center">Komentar 4</th>
+  </tr>
+  <tr>
+    <td align="center"><img src="screenshots/p2-review-diberikan-inline-3.png" width="400" alt="Komentar inline 3"></td>
+    <td align="center"><img src="screenshots/p2-review-diberikan-inline-4.png" width="400" alt="Komentar inline 4"></td>
+  </tr>
+</table>
+
+### 3. PR pasangan setelah merge
+
+<table border="1" cellpadding="8" cellspacing="0" align="center">
+  <tr>
+    <th align="center">PR pasangan berstatus merged</th>
+  </tr>
+  <tr>
+    <td align="center"><img src="screenshots/p2-pr-pasangan-merged.png" width="700" alt="PR pasangan merged"></td>
+  </tr>
+</table>
 
 ---
 
 ## Praktikum 3: Static Analysis dan Mid Review
-
-_(isi menyusul)_
