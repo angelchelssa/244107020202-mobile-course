@@ -10,7 +10,11 @@ import 'settings_page.dart';
 class NotesPage extends ConsumerWidget {
   const NotesPage({super.key});
 
-  Future<void> _showAddDialog(BuildContext context, WidgetRef ref) async {
+  Future<void> _showAddDialog(
+    BuildContext context,
+    WidgetRef ref,
+    List<String> existingTitles,
+  ) async {
     final messenger = ScaffoldMessenger.of(context);
     final title = TextEditingController();
     final body = TextEditingController();
@@ -44,7 +48,9 @@ class NotesPage extends ConsumerWidget {
             ),
             FilledButton(
               onPressed: () {
-                final error = validateTitle(title.text);
+                final error =
+                    validateTitle(title.text) ??
+                    validateTitleDuplicate(title.text, existingTitles);
                 if (error != null) {
                   setDialogState(() => titleError = error);
                   return;
@@ -154,7 +160,11 @@ class NotesPage extends ConsumerWidget {
               ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => _showAddDialog(context, ref),
+        onPressed: () {
+          final titles = notes.asData?.value.map((n) => n.title).toList() ?? [];
+
+          _showAddDialog(context, ref, titles);
+        },
         child: const Icon(Icons.add),
       ),
     );
