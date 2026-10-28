@@ -160,22 +160,25 @@ Latihan awalnya dikerjakan di `05-week-5-local-storage-offline-first`, lalu dipi
 
 #### Komentar inline
 
-<table border="1" cellpadding="8" cellspacing="0" align="center">
+<table border="1" cellpadding="8" cellspacing="0" align="center" width="750">
   <tr>
     <th align="center" width="50%">Komentar 1</th>
     <th align="center" width="50%">Komentar 2</th>
   </tr>
   <tr>
-    <td align="center"><img src="screenshots/p2-review-diberikan-inline-1.png" width="400" alt="Komentar inline 1"></td>
-    <td align="center"><img src="screenshots/P2-review-diberikan-inline-2.png" width="400" alt="Komentar inline 2"></td>
+    <td align="center"><img src="screenshots/p2-review-diberikan-inline-1.png" width="350" alt="Komentar inline 1"></td>
+    <td align="center"><img src="screenshots/P2-review-diberikan-inline-2.png" width="350" alt="Komentar inline 2"></td>
+  </tr>
+</table>
+
+<table border="1" cellpadding="8" cellspacing="0" align="center" width="750">
+  <tr>
+    <th align="center" width="50%">Komentar 3</th>
+    <th align="center" width="50%">Komentar 4</th>
   </tr>
   <tr>
-    <th align="center">Komentar 3</th>
-    <th align="center">Komentar 4</th>
-  </tr>
-  <tr>
-    <td align="center"><img src="screenshots/p2-review-diberikan-inline-3.png" width="400" alt="Komentar inline 3"></td>
-    <td align="center"><img src="screenshots/p2-review-diberikan-inline-4.png" width="400" alt="Komentar inline 4"></td>
+    <td align="center"><img src="screenshots/p2-review-diberikan-inline-3.png" width="350" alt="Komentar inline 3"></td>
+    <td align="center"><img src="screenshots/p2-review-diberikan-inline-4.png" width="350" alt="Komentar inline 4"></td>
   </tr>
 </table>
 
@@ -192,4 +195,112 @@ Latihan awalnya dikerjakan di `05-week-5-local-storage-offline-first`, lalu dipi
 
 ---
 
-## Praktikum 3: Static Analysis dan Mid Review
+## Praktikum 3: Validasi Judul Catatan
+
+### 1. Tujuan
+
+Menambah validasi judul pada dialog "Catatan baru" berdasarkan hasil peer review.
+Tiga kondisi yang dicegah:
+
+- Judul kosong atau hanya spasi.
+- Judul lebih dari 200 karakter.
+- Judul duplikat yang sudah tersimpan.
+
+### 2. Perubahan Kode
+
+| File | Penjelasan |
+|------|------------|
+| `lib/utils/validators.dart` | Fungsi `validateTitle` diperluas dengan aturan panjang maksimum 200 karakter. Fungsi baru `validateTitleDuplicate` memeriksa duplikat secara case-insensitive setelah spasi di tepi dibuang. |
+| `lib/pages/notes_page.dart` | Dialog "Catatan baru" menerima daftar judul yang sudah ada dan menjalankan kedua validasi sebelum menyimpan catatan. |
+| `test/validators_test.dart` | Tiga grup pengujian ditambahkan: judul hanya spasi ditolak, batas 200 karakter (200 diterima, 201 ditolak), dan duplikat case-insensitive ditolak. |
+
+### 3. Aturan Validasi
+
+| No | Kondisi | Pesan yang muncul |
+|----|---------|-------------------|
+| 1 | Judul kosong atau hanya spasi | `Judul tidak boleh kosong` |
+| 2 | Judul lebih dari 200 karakter | `Judul terlalu panjang (maks. 200 karakter)` |
+| 3 | Judul sudah ada di daftar | `Judul catatan sudah ada` |
+
+**Catatan:** Pengecekan duplikat tidak membedakan huruf besar/kecil dan mengabaikan spasi di tepi. Batas 200 karakter adalah tambahan di luar permintaan awal.
+
+### 4. Hasil Pengujian Aplikasi
+
+<table border="1" cellpadding="8" cellspacing="0" align="center" width="750">
+  <tr>
+    <th align="center" width="33%">Judul kosong ditolak</th>
+    <th align="center" width="33%">Judul hanya spasi ditolak</th>
+    <th align="center" width="33%">Judul duplikat ditolak</th>
+  </tr>
+  <tr>
+    <td align="center"><img src="screenshots/p3-01-validasi-judul-kosong.jpeg" width="230" alt="Judul kosong ditolak"></td>
+    <td align="center"><img src="screenshots/p3-02-validasi-judul-spasi.jpeg" width="230" alt="Judul hanya spasi ditolak"></td>
+    <td align="center"><img src="screenshots/p3-03-validasi-judul-duplikat.jpeg" width="230" alt="Judul duplikat ditolak"></td>
+  </tr>
+  <tr>
+    <td align="center">Dialog tetap terbuka, pesan "Judul tidak boleh kosong"</td>
+    <td align="center">Spasi saja dianggap kosong (trim)</td>
+    <td align="center">Judul yang sama persis ditolak</td>
+  </tr>
+</table>
+
+<table border="1" cellpadding="8" cellspacing="0" align="center" width="750">
+  <tr>
+    <th align="center" width="33%">Duplikat beda huruf ditolak</th>
+    <th align="center" width="33%">Judul 201 karakter ditolak</th>
+    <th align="center" width="33%">Judul valid berhasil disimpan</th>
+  </tr>
+  <tr>
+    <td align="center"><img src="screenshots/p3-04-validasi-duplikat-beda-huruf.jpeg" width="230" alt="Duplikat dengan huruf berbeda tetap ditolak"></td>
+    <td align="center"><img src="screenshots/p3-05-validasi-judul-201-karakter.jpeg" width="230" alt="Judul 201 karakter ditolak"></td>
+    <td align="center"><img src="screenshots/p3-07-judul-valid-tersimpan.jpeg" width="230" alt="Judul valid berhasil disimpan"></td>
+  </tr>
+  <tr>
+    <td align="center">"catatan" dan "Catatan" dianggap duplikat</td>
+    <td align="center">Pesan "Judul terlalu panjang (maks. 200 karakter)"</td>
+    <td align="center">Catatan masuk daftar (belum sinkron)</td>
+  </tr>
+</table>
+
+### 5. Hasil Pemeriksaan Kode
+
+Dijalankan dari folder `08-week-8-mid-project-review/week5_offline_notes`:
+
+| Perintah | Fungsi | Hasil |
+|----------|--------|-------|
+| `flutter analyze` | Analisis statis kode | No issues found! |
+| `dart format --set-exit-if-changed lib test` | Periksa format kode | Formatted 15 files (0 changed) |
+| `flutter test` | Jalankan semua unit test | +12: All tests passed! |
+
+<table border="1" cellpadding="8" cellspacing="0" align="center" width="750">
+  <tr>
+    <th align="center">Hasil flutter analyze</th>
+  </tr>
+  <tr>
+    <td align="center"><img src="screenshots/p3-08-terminal-flutter-analyze.jpeg" width="650" alt="Hasil flutter analyze"></td>
+  </tr>
+</table>
+
+<table border="1" cellpadding="8" cellspacing="0" align="center" width="750">
+  <tr>
+    <th align="center">Hasil dart format --set-exit-if-changed lib test</th>
+  </tr>
+  <tr>
+    <td align="center"><img src="screenshots/p3-09-terminal-dart-format.jpeg" width="650" alt="Hasil dart format"></td>
+  </tr>
+</table>
+
+<table border="1" cellpadding="8" cellspacing="0" align="center" width="750">
+  <tr>
+    <th align="center">Hasil flutter test</th>
+  </tr>
+  <tr>
+    <td align="center"><img src="screenshots/p3-10-terminal-flutter-test.jpeg" width="650" alt="Hasil flutter test"></td>
+  </tr>
+</table>
+
+### 6. Catatan dan Keterbatasan
+
+- Pengecekan duplikat memakai daftar judul saat dialog dibuka; jika data masih loading atau error, daftar kosong sehingga pengecekan dilewati.
+- `flutter analyze` dari root repo menemukan 1 error lama di `02-week-2.../test/widget_test.dart` (`MyApp` tidak ada); di luar cakupan project Minggu 8.
+
