@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../data/offline_providers.dart';
 import '../data/sync.dart';
 import '../utils/validators.dart';
@@ -76,9 +77,7 @@ class NotesPage extends ConsumerWidget {
     if (ref.read(forceOfflineProvider)) {
       messenger
         ..hideCurrentSnackBar()
-        ..showSnackBar(
-          const SnackBar(content: Text('Offline: sync ditunda')),
-        );
+        ..showSnackBar(const SnackBar(content: Text('Offline: sync ditunda')));
       return;
     }
 
@@ -144,8 +143,7 @@ class NotesPage extends ConsumerWidget {
                   return ListTile(
                     title: Text(n.title),
                     subtitle: Text(n.body),
-                    leading:
-                        Icon(n.dirty ? Icons.cloud_off : Icons.cloud_done),
+                    leading: Icon(n.dirty ? Icons.cloud_off : Icons.cloud_done),
                     trailing: IconButton(
                       icon: const Icon(Icons.delete),
                       onPressed: () =>

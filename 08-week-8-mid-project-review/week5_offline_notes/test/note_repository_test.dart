@@ -71,15 +71,18 @@ void main() {
     expect(await repo.countDirty(), 1);
   });
 
-  test('catatan baru setelah dirtyIds() tetap dirty (tidak ada race)', () async {
-    await repo.addNote(title: 'Lama');
-    final ids = await repo.dirtyIds(); // awal sync
-    final baru = await repo.addNote(title: 'Dibuat saat sync berjalan');
+  test(
+    'catatan baru setelah dirtyIds() tetap dirty (tidak ada race)',
+    () async {
+      await repo.addNote(title: 'Lama');
+      final ids = await repo.dirtyIds(); // awal sync
+      final baru = await repo.addNote(title: 'Dibuat saat sync berjalan');
 
-    await repo.markSynced(ids); // akhir sync
+      await repo.markSynced(ids); // akhir sync
 
-    expect(await repo.dirtyIds(), [baru.id]);
-  });
+      expect(await repo.dirtyIds(), [baru.id]);
+    },
+  );
 
   test('syncNotes mengembalikan jumlah dan mengosongkan antrean', () async {
     await repo.addNote(title: 'A');

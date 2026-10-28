@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../data/offline_providers.dart';
 
 class PostsPage extends ConsumerWidget {
@@ -28,21 +29,33 @@ class PostsPage extends ConsumerWidget {
               width: double.infinity,
               color: Colors.orange.shade200,
               padding: const EdgeInsets.all(8),
-              child: const Text('Mode offline: data dari cache lokal',
-                  style: TextStyle(color: Colors.black)),
+              child: const Text(
+                'Mode offline: data dari cache lokal',
+                style: TextStyle(color: Colors.black),
+              ),
             ),
           Expanded(
             child: posts.when(
               loading: () => const Center(child: CircularProgressIndicator()),
               error: (e, _) => Center(child: Text('Error: $e')),
               data: (list) => list.isEmpty
-                  ? const Center(child: Text('Cache kosong. Nyalakan internet dulu.'))
+                  ? const Center(
+                      child: Text('Cache kosong. Nyalakan internet dulu.'),
+                    )
                   : ListView.builder(
                       itemCount: list.length,
                       itemBuilder: (_, i) => ListTile(
                         leading: Text('${list[i].id}'),
-                        title: Text(list[i].title, maxLines: 1, overflow: TextOverflow.ellipsis),
-                        subtitle: Text(list[i].body, maxLines: 2, overflow: TextOverflow.ellipsis),
+                        title: Text(
+                          list[i].title,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        subtitle: Text(
+                          list[i].body,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ),
                     ),
             ),

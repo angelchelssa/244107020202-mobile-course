@@ -1,13 +1,15 @@
 import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:sqflite/sqflite.dart';
+
 import '../local/db.dart';
 import '../post.dart';
 
 class PostRepository {
   PostRepository({Future<Database> Function()? openDb, Dio? dio})
-      : _openDb = openDb ?? openNotesDb,
-        _dio = dio ?? Dio();
+    : _openDb = openDb ?? openNotesDb,
+      _dio = dio ?? Dio();
 
   final Future<Database> Function() _openDb;
   final Dio _dio;
@@ -16,8 +18,11 @@ class PostRepository {
     final db = await _openDb();
     final rows = await db.query('cached_posts', orderBy: 'id ASC');
     return rows
-        .map((r) => Post.fromJson(
-            jsonDecode(r['payload'] as String) as Map<String, dynamic>))
+        .map(
+          (r) => Post.fromJson(
+            jsonDecode(r['payload'] as String) as Map<String, dynamic>,
+          ),
+        )
         .toList();
   }
 
@@ -28,11 +33,11 @@ class PostRepository {
       await txn.delete('cached_posts');
       final batch = txn.batch();
       for (final p in posts) {
-        batch.insert(
-          'cached_posts',
-          {'id': p.id, 'payload': jsonEncode(p.toJson()), 'cached_at': now},
-          conflictAlgorithm: ConflictAlgorithm.replace,
-        );
+        batch.insert('cached_posts', {
+          'id': p.id,
+          'payload': jsonEncode(p.toJson()),
+          'cached_at': now,
+        }, conflictAlgorithm: ConflictAlgorithm.replace);
       }
       await batch.commit(noResult: true);
     });

@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'local/note.dart';
 import 'post.dart';
 import 'repositories/note_repository.dart';
@@ -8,13 +9,13 @@ import 'repositories/post_repository.dart';
 
 final noteRepositoryProvider = Provider((ref) => NoteRepository());
 
-final notesProvider =
-    AsyncNotifierProvider<NotesNotifier, List<Note>>(NotesNotifier.new);
+final notesProvider = AsyncNotifierProvider<NotesNotifier, List<Note>>(
+  NotesNotifier.new,
+);
 
 class NotesNotifier extends AsyncNotifier<List<Note>> {
   @override
-  Future<List<Note>> build() =>
-      ref.watch(noteRepositoryProvider).fetchNotes();
+  Future<List<Note>> build() => ref.watch(noteRepositoryProvider).fetchNotes();
 
   Future<void> add(String title, String body) async {
     await ref.read(noteRepositoryProvider).addNote(title: title, body: body);
@@ -47,8 +48,9 @@ class ForceOfflineNotifier extends Notifier<bool> {
   void set(bool value) => state = value;
 }
 
-final forceOfflineProvider =
-    NotifierProvider<ForceOfflineNotifier, bool>(ForceOfflineNotifier.new);
+final forceOfflineProvider = NotifierProvider<ForceOfflineNotifier, bool>(
+  ForceOfflineNotifier.new,
+);
 
 class PostsNotifier extends AsyncNotifier<List<Post>> {
   @override
@@ -85,5 +87,6 @@ class PostsNotifier extends AsyncNotifier<List<Post>> {
   }
 }
 
-final postsProvider =
-    AsyncNotifierProvider<PostsNotifier, List<Post>>(PostsNotifier.new);
+final postsProvider = AsyncNotifierProvider<PostsNotifier, List<Post>>(
+  PostsNotifier.new,
+);
